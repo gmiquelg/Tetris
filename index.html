@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tetris G</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="main-menu">
+      <h1>Welcome to Tetris G</h1>
+      <button id="start-button">Start</button>
+      <div style="height: 30px;"></div>
+      <h3 style="margin-bottom: 0px;">How to play?</h3>
+      <img src="./arrows.png" alt="Arrows how to play" height="200px">
+    </div>
+
+    <div id="game-section" style="display: none;">
+      <div id="container">
+        <div>
+          <canvas id="next"></canvas>
+          <h4>Next piece:</h4>
+        </div>
+        <div style="width: 30px;"></div>
+        <div id="app">
+          <canvas id="game"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let gameStarted = false; // Flag to track if the game has started
+      const AUDIO = new window.Audio('./tetris.mp3')
+
+      // Function to start the game
+      function startGame() {
+        if (!gameStarted) {
+          AUDIO.volume = 0.05
+          AUDIO.currentTime = 0;
+          AUDIO.play()
+
+          // Hide the main menu
+          document.getElementById('main-menu').style.display = 'none';
+          // Show the game section
+          document.getElementById('game-section').style.display = 'block';
+
+          // Set game started flag to true
+          gameStarted = true;
+        }
+      }
+
+      // Event listener for the Start Game button
+      document.getElementById('start-button').addEventListener('click', startGame);
+    </script>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
