@@ -63,7 +63,19 @@ function draw() {
 
   CONTEXT_NEXT.fillStyle = '#000'
   CONTEXT_NEXT.fillRect(0, 0, CANVAS_NEXT.width, CANVAS_NEXT.height);
-  
+
+  // Draw a column where the piece is landing
+  grid.forEach((row, y) => {
+    if (y >= nextPiece.shape.length + nextPiece.posY) {
+      row.forEach((value, x) => {
+        if (x >= nextPiece.posX && x < nextPiece.posX + nextPiece.shape[0].length) {
+          CONTEXT.fillStyle = 'rgba(255, 201, 84, 0.1)';
+          CONTEXT.fillRect(x * SIZE, y * SIZE, SIZE, SIZE);
+        }
+      })
+    }
+  })
+
   // Draw grid based on the grid array
   grid.forEach((row, y) => {
     row.forEach((value, x) => {
@@ -80,6 +92,9 @@ function draw() {
     row.forEach((value, x) => {
       if (value) {
         CONTEXT.fillStyle = 'green';
+        CONTEXT.fillRect((x + nextPiece.posX) * SIZE, (y + nextPiece.posY) * SIZE, SIZE, SIZE);
+      } else {
+        CONTEXT.fillStyle = 'rgba(255, 201, 84, 0.1)';
         CONTEXT.fillRect((x + nextPiece.posX) * SIZE, (y + nextPiece.posY) * SIZE, SIZE, SIZE);
       }
       CONTEXT.strokeRect((x + nextPiece.posX) * SIZE, (y + nextPiece.posY) * SIZE, SIZE, SIZE);
