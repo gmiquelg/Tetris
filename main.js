@@ -1,65 +1,10 @@
 import './style.css'
-
-const CANVAS = document.querySelector('#game');
-const CONTEXT = CANVAS.getContext('2d');
-
-const CANVAS_NEXT = document.querySelector('#next');
-const CONTEXT_NEXT = CANVAS_NEXT.getContext('2d');
-
-const PIECES = [
-  // Square (2x2)
-  [
-    [1, 1],
-    [1, 1]
-  ],
-  // L-shape
-  [
-    [1, 0],
-    [1, 0],
-    [1, 1]
-  ],
-  // T-shape
-  [
-    [1, 0],
-    [1, 1],
-    [1, 0]
-  ],
-  // Line
-  [
-    [1],
-    [1],
-    [1],
-    [1]
-  ],
-  // S-shape
-  [
-    [0, 1],
-    [1, 1],
-    [1, 0]
-  ],
-  // Z-shape
-  [
-    [1, 0],
-    [1, 1],
-    [0, 1]
-  ],
-  // J-shape
-  [
-    [0, 1],
-    [0, 1],
-    [1, 1]
-  ]
-];
+import { AUDIO, CANVAS, CONTEXT, CANVAS_NEXT, CONTEXT_NEXT, PIECES, initialDropInterval, minDropInterval, SIZE, ROWS, COLUMNS, ROWS_NEXT, COLUMNS_NEXT, audioInterval, app, counterDisplay, scoreDisplay } from "./consts.js";
 
 // Set canvas size based on grid cell size
-const SIZE = 30
-const ROWS = 20
-const COLUMNS = 10
 CANVAS.width = COLUMNS * SIZE
 CANVAS.height = ROWS * SIZE
 
-const ROWS_NEXT = 6
-const COLUMNS_NEXT = 6
 CANVAS_NEXT.width = COLUMNS_NEXT * SIZE
 CANVAS_NEXT.height = ROWS_NEXT * SIZE
 
@@ -67,8 +12,6 @@ let startingTime = Date.now()
 let currentTime = Date.now()
 let lastDropTime = 0
 
-let initialDropInterval = 1000; // 1 second
-let minDropInterval = 400; // 0.4 seconds
 let dropInterval = initialDropInterval;
 
 let score = 0;
@@ -80,6 +23,26 @@ nextPiece.posX = 4
 nextPiece.posY = 0
 let showingPiece = generateNextPiece()
 
+let audioLastTime = Date.now()
+
+let gameStarted = false;
+
+
+export function startGame() {
+  if (!gameStarted) {
+    AUDIO.volume = 0.05
+    AUDIO.currentTime = 0;
+    AUDIO.play()
+
+    // Hide the main menu
+    document.getElementById('main-menu').style.display = 'none';
+    // Show the game section
+    document.getElementById('game-section').style.display = 'block';
+
+    // Set game started flag to true
+    gameStarted = true;
+  }
+}
 
 function formatTime(milliseconds) {
 
@@ -232,7 +195,10 @@ function updateGrid() {
 
 function resetGame() {
 
+  // Reset audio
   AUDIO.pause()
+  audioLastTime = Date.now()
+
   // Show the main menu 
   document.getElementById('main-menu').style.display = 'block';
   // Hide the game section
@@ -272,6 +238,15 @@ function checkGameOver() {
 }
 
 function update() {
+
+  if (Date.now() - audioLastTime > audioInterval) {
+    AUDIO.pause()
+    AUDIO.volume = 0.05
+    AUDIO.currentTime = 0;
+    AUDIO.play()
+
+    audioLastTime = Date.now()
+  }
 
   if (gameStarted) {
     const now = Date.now()
@@ -353,16 +328,12 @@ document.addEventListener('keydown', event => {
   }
 });
 
-const app = document.getElementById('app');
-
 // Create counter display
-const counterDisplay = document.createElement('h4');
 counterDisplay.id = 'counter';
 counterDisplay.textContent = 'Time: 00:00:00';
-app.insertBefore(counterDisplay, app.firstChild); // Insert before the first child of #app
+app.insertBefore(counterDisplay, app.firstChild); // Insert before the first child of 
 
 // Create score display
-const scoreDisplay = document.createElement('h5');
 scoreDisplay.id = 'score';
 scoreDisplay.textContent = 'Score: 0';
 app.appendChild(scoreDisplay); // Append to the end of #app

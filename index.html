@@ -29,27 +29,10 @@
       </div>
     </div>
 
-    <script>
-      let gameStarted = false; // Flag to track if the game has started
-      const AUDIO = new window.Audio('./tetris.mp3')
+    <script type="module">
 
-      // Function to start the game
-      function startGame() {
-        if (!gameStarted) {
-          AUDIO.volume = 0.05
-          AUDIO.currentTime = 0;
-          AUDIO.play()
-
-          // Hide the main menu
-          document.getElementById('main-menu').style.display = 'none';
-          // Show the game section
-          document.getElementById('game-section').style.display = 'block';
-
-          // Set game started flag to true
-          gameStarted = true;
-        }
-      }
-
+      import { startGame } from './main.js'; 
+      
       // Event listener for the Start Game button
       document.getElementById('start-button').addEventListener('click', startGame);
     </script>
